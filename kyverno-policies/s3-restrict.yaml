@@ -1,0 +1,29 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: s3-restrict
+  annotations:
+    policies.kyverno.io/title: "Allow creating s3 bucket in us-west-2 only"
+    policies.kyverno.io/category: "AWS-S3"
+    policies.kyverno.io/severity: medium
+    kyverno.io/kyverno-version: 1.6.0
+    policies.kyverno.io/minversion: 1.6.0
+    policies.kyverno.io/subject: "Bucket"
+    policies.kyverno.io/description: "Allow creating s3 bucket in us-west-2 only"    
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+  - name: "s3-bucket-in-us-west-2-only"
+    match:
+      any:
+      - resources:
+          kinds:
+            - "Bucket"
+    validate:
+      message: "Using any location other than `us-west-2` is not allowed"
+      pattern:
+        spec:
+          forProvider:
+            locationConstraint: "us-west-2"
+

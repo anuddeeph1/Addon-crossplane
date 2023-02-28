@@ -1,0 +1,29 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: instance-t3.medium-allow-only
+  annotations:
+    policies.kyverno.io/title: "instance-t3.medium-allow-only"
+    policies.kyverno.io/category: "AWS-EC2"
+    policies.kyverno.io/severity: medium
+    kyverno.io/kyverno-version: 1.6.0
+    policies.kyverno.io/minversion: 1.6.0
+    policies.kyverno.io/subject: "instance"
+    policies.kyverno.io/description: "instance-t3.medium-allow-only"     
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+  - name: "instance-t3.medium-allow-only"
+    match:
+      any:
+      - resources:
+          kinds:
+            - "Instance"
+    validate:
+      message: "Using any instance type other than `t3.medium` is not allowed"
+      pattern:
+        spec:
+          forProvider:
+            instanceType: "t3-medium"
+
