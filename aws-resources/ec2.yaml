@@ -1,0 +1,13 @@
+apiVersion: ec2.aws.crossplane.io/v1alpha1
+kind: Instance
+metadata:
+  name: sample-instance
+spec:
+  forProvider:
+    region: us-west-1
+    imageId: ami-00569e54da628d17c
+    instanceType: t2.micro
+    keyName: devtest-key
+    subnetId: subnet-0e9a542e1373ea6de
+  providerConfigRef:
+    name: default
